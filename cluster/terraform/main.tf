@@ -58,22 +58,25 @@ module "eks" {
   # EKS Auto Mode configuration
   # When enabled, EKS automatically manages compute resources and core addons
   # This eliminates the need for managed node groups and manual addon management
-  cluster_compute_config = var.auto_mode ? {
-    enabled    = true
-    node_pools = ["general-purpose", "system"]
-  } : null
+  cluster_compute_config = merge(
+    {},
+    var.auto_mode ? {
+      enabled    = true
+      node_pools = ["general-purpose", "system"]
+    } : null
+  )
 
   # Only create managed node groups when not using Auto Mode
   # Auto Mode handles compute resources automatically
   eks_managed_node_groups = var.auto_mode ? {} : {
     initial = {
-      instance_types = ["m5.large"]
+      instance_types = ["t3a.large", "t3.large"]
       
-      min_size     = 3
-      max_size     = 6
-      desired_size = 4
+      min_size     = 1
+      max_size     = 4
+      desired_size = 2
 
-      disk_size = 100
+      disk_size = 40
       
       labels = {
         pool = "system"
