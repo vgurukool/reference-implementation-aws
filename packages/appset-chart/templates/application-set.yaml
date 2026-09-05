@@ -15,7 +15,8 @@
 {{- $appsetPrefix := .Values.appsetPrefix -}}
 
 {{- range $chartName, $chartConfig := .Values }}
-{{- if and (kindIs "map" $chartConfig) (hasKey $chartConfig "enabled") }}
+{{- if kindIs "map" $chartConfig }}
+{{- if hasKey $chartConfig "enabled" }}
 {{- if eq (toString $chartConfig.enabled) "true" }}
 {{- $nameNormalize := printf "%s" $chartName | replace "_" "-" | trunc 63 | trimSuffix "-"  -}}
 apiVersion: argoproj.io/v1alpha1
@@ -184,6 +185,7 @@ spec:
         {{- $chartConfig.ignoreDifferences | toYaml | nindent 8 }}
       {{- end }}
 ---
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}
