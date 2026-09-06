@@ -137,8 +137,11 @@ configs:
     server.insecure: true
   rbac:
     policy.csv: |
+      g, admin, role:admin
+      g, /admin, role:admin
       g, superuser, role:admin
       g, backstage, role:readonly
+    policy.default: role:readonly
 
 extraObjects:
 - |
