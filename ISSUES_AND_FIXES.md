@@ -286,6 +286,10 @@ This document serves as the central log of technical issues, root causes, remedi
       --region us-east-2 \
       --logging '{"clusterLogging":[{"types":["api","audit","authenticator"],"enabled":false}]}'
   ```
+* Configured email budget alarms on `vgurukool-idp-monthly-cap` ($200 cap) delivering to `ayush.o.singhaniya@gmail.com`:
+  * 80% Actual Spend ($160)
+  * 100% Actual Spend ($200)
+  * 100% Forecasted Spend ($200)
 
 ### Verification
 * Ran `aws eks describe-cluster --name cnoe-ref-impl --query "cluster.logging.clusterLogging"`:
