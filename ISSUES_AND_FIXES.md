@@ -302,4 +302,5 @@ This document serves as the central log of technical issues, root causes, remedi
   ]
   ```
 * All control plane log ingestion into CloudWatch is halted, reducing ongoing AWS burn rate by ~80% (saving ~$15–$25/day).
+* Deleted CloudWatch log group `/aws/eks/cnoe-ref-impl/cluster` (purging all 36.3 GB of stale compressed logs to $0.00/month storage).
 
