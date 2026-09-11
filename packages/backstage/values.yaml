@@ -103,6 +103,11 @@ backstage:
         pullRequestBranchName: backstage-integration
       rules:
         - allow: [Component, System, API, Resource, Location, Template, Domain, User, Group]
+      locations:
+        - type: url
+          target: https://github.com/vgurukool/idp-aws/blob/HEAD/templates/backstage/catalog-info.yaml
+          rules:
+            - allow: [Component, System, API, Resource, Location, Template, Domain, User, Group]
     kubernetes:
       serviceLocatorMethod:
         type: multiTenant
