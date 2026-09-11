@@ -15,6 +15,7 @@ This document serves as the central log of technical issues, root causes, remedi
 7. [Keycloak: Premature Session Expiration Warning (1-Minute Expiry)](#7-keycloak-premature-session-expiration-warning-1-minute-expiry)
 8. [LiteLLM: Dedicated Namespace Migration & Pod Balancing](#8-litellm-dedicated-namespace-migration--pod-balancing)
 9. [AWS Cost Optimization: EKS Control Plane Logging (CloudWatch Vended Logs Surge)](#9-aws-cost-optimization-eks-control-plane-logging-cloudwatch-vended-logs-surge)
+10. [Automated Daily Cost Email Reporter (Serverless Lambda + EventBridge)](#10-automated-daily-cost-email-reporter-serverless-lambda--eventbridge)
 
 ---
 
@@ -303,4 +304,38 @@ This document serves as the central log of technical issues, root causes, remedi
   ```
 * All control plane log ingestion into CloudWatch is halted, reducing ongoing AWS burn rate by ~80% (saving ~$15–$25/day).
 * Deleted CloudWatch log group `/aws/eks/cnoe-ref-impl/cluster` (purging all 36.3 GB of stale compressed logs to $0.00/month storage).
+
+---
+
+## 10. Automated Daily Cost Email Reporter (Serverless Lambda + EventBridge)
+
+### Overview
+To ensure complete visibility into daily and month-to-date AWS spend without manual console checks, a zero-cost serverless reporting pipeline was provisioned.
+
+### Architecture
+```
++------------------------+      +-------------------------------+      +-------------------------+      +-----------------------------+
+|  Amazon EventBridge    | ---> |  AWS Lambda Function          | ---> |  Amazon SNS Topic       | ---> |  Email Inbox                |
+|  Cron: 8:00 AM Central |      |  vgurukool-daily-cost-reporter|      |  vgurukool-daily-cost-  |      |  ayush.o.singhaniya@        |
+|  (13:00 UTC daily)     |      |  Queries CE API & Formats Msg |      |  report                 |      |  gmail.com                  |
++------------------------+      +-------------------------------+      +-------------------------+      +-----------------------------+
+```
+
+### Components Provisioned
+1. **Amazon SNS Topic:** `arn:aws:sns:us-east-2:711387113105:vgurukool-daily-cost-report`
+   * Subscription: `EMAIL` -> `ayush.o.singhaniya@gmail.com` (confirmation sent).
+2. **AWS Lambda Function:** `vgurukool-daily-cost-reporter` (Python 3.12, 128 MB, in `us-east-2`)
+   * Queries Cost Explorer for:
+     * Yesterday's actual cost ($)
+     * Month-to-date total cost ($)
+     * Top services contributing to cost
+     * Projected month-end forecast ($)
+   * Publishes formatted daily summary to SNS.
+3. **Amazon EventBridge Scheduled Rule:** `vgurukool-daily-cost-report-rule`
+   * Schedule expression: `cron(0 13 * * ? *)` (runs daily at 8:00 AM Central / 13:00 UTC right after AWS finalizes prior-day billing).
+
+### Verification
+* Executed test invocation: Returned HTTP 200 (`{"status": "success", "yesterday_cost": 24.71, "mtd_cost": 261.16}`).
+* Message dispatched to SNS topic and delivered to `ayush.o.singhaniya@gmail.com`.
+
 
