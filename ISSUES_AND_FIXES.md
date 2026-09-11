@@ -14,6 +14,7 @@ This document serves as the central log of technical issues, root causes, remedi
 6. [CAIPE: Platform Health Probes Degraded / Down](#6-caipe-platform-health-probes-degraded--down)
 7. [Keycloak: Premature Session Expiration Warning (1-Minute Expiry)](#7-keycloak-premature-session-expiration-warning-1-minute-expiry)
 8. [LiteLLM: Dedicated Namespace Migration & Pod Balancing](#8-litellm-dedicated-namespace-migration--pod-balancing)
+9. [AWS Cost Optimization: EKS Control Plane Logging (CloudWatch Vended Logs Surge)](#9-aws-cost-optimization-eks-control-plane-logging-cloudwatch-vended-logs-surge)
 
 ---
 
@@ -264,3 +265,37 @@ This document serves as the central log of technical issues, root causes, remedi
 * `https://litellm.vgurukool.com/health/liveliness` returns `"I'm alive!"`.
 * `https://litellm.vgurukool.com/.well-known/litellm-ui-config` reports `sso_configured: true`.
 * Internal connectivity verified from CAIPE, LearnHouse, and MAIC containers.
+
+---
+
+## 9. AWS Cost Optimization: EKS Control Plane Logging (CloudWatch Vended Logs Surge)
+
+### Symptoms
+* AWS Cost Explorer reported that **Amazon CloudWatch** accounted for **78.8% ($205.93)** of the total monthly spend ($261.16), while actual EC2 compute was only $9.81.
+* Daily spend spiked up to $72/day on `USE2-VendedLog-Bytes`.
+
+### Root Causes
+* EKS control plane logging was enabled for `api`, `audit`, and `authenticator`.
+* Frequent cluster polling by Argo CD, External Secrets Operator, and cert-manager generated over **400 GB of audit/api logs** ingested into CloudWatch at $0.50/GB.
+
+### Remediation & Fixes
+* Disabled EKS control plane logging across all types (`api`, `audit`, `authenticator`):
+  ```bash
+  aws eks update-cluster-config \
+      --name cnoe-ref-impl \
+      --region us-east-2 \
+      --logging '{"clusterLogging":[{"types":["api","audit","authenticator"],"enabled":false}]}'
+  ```
+
+### Verification
+* Ran `aws eks describe-cluster --name cnoe-ref-impl --query "cluster.logging.clusterLogging"`:
+  ```json
+  [
+      {
+          "types": ["api", "audit", "authenticator", "controllerManager", "scheduler"],
+          "enabled": false
+      }
+  ]
+  ```
+* All control plane log ingestion into CloudWatch is halted, reducing ongoing AWS burn rate by ~80% (saving ~$15–$25/day).
+
