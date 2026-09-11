@@ -1,0 +1,406 @@
+---
+# Systems
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: lakshmi-suite
+  title: Lakshmi Business Suite
+  description: Enterprise business applications suite for financial, logistics, agriculture, education, and portfolio dashboard management.
+spec:
+  owner: guests
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: ai-platform
+  title: AI & Multi-Agent Platform
+  description: Generative AI platform services powering dynamic autonomous agents, tool integration, multi-agent workflows, learning management, and LLM gateway routing.
+spec:
+  owner: guests
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: core-infrastructure
+  title: Core Cloud & IDP Infrastructure
+  description: Foundational GitOps delivery, container-native workflow orchestration, identity federation, and developer portal.
+spec:
+  owner: guests
+---
+# 1. Ashta Lakshmi (Master Business Dashboard)
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ashta-lakshmi
+  title: Ashta Lakshmi
+  description: Master business portal and aggregator dashboard for the Lakshmi enterprise application suite.
+  tags:
+    - business
+    - lakshmi
+    - portal
+    - dashboard
+  annotations:
+    backstage.io/kubernetes-label-selector: 'app.kubernetes.io/name=ashta-lakshmi'
+    backstage.io/kubernetes-namespace: vgurukool
+    argocd/app-name: ashta-lakshmi
+    backstage.io/view-url: https://ashta-lakshmi.vgurukool.com
+  links:
+    - url: https://ashta-lakshmi.vgurukool.com
+      title: Open Application
+      icon: dashboard
+    - url: https://github.com/vgurukool/ashta-lakshmi
+      title: Source Code
+      icon: github
+spec:
+  type: website
+  lifecycle: production
+  owner: guests
+  system: lakshmi-suite
+---
+# 2. Dhana Lakshmi (Wealth Management)
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dhana-lakshmi
+  title: Dhana Lakshmi
+  description: Wealth management, financial investments, portfolio tracking, and treasury services.
+  tags:
+    - business
+    - finance
+    - lakshmi
+    - wealth
+  annotations:
+    backstage.io/kubernetes-label-selector: 'app.kubernetes.io/name=dhana-lakshmi'
+    backstage.io/kubernetes-namespace: vgurukool
+    argocd/app-name: dhana-lakshmi
+    backstage.io/view-url: https://dhana-lakshmi.vgurukool.com
+  links:
+    - url: https://dhana-lakshmi.vgurukool.com
+      title: Open Application
+      icon: dashboard
+    - url: https://github.com/vgurukool/dhana-lakshmi
+      title: Source Code
+      icon: github
+spec:
+  type: website
+  lifecycle: production
+  owner: guests
+  system: lakshmi-suite
+---
+# 3. Dhanya Lakshmi (Agriculture & Inventory)
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dhanya-lakshmi
+  title: Dhanya Lakshmi
+  description: Agricultural resource management, inventory management, supply chain, and grain trading portal.
+  tags:
+    - business
+    - agriculture
+    - lakshmi
+    - supply-chain
+  annotations:
+    backstage.io/kubernetes-label-selector: 'app.kubernetes.io/name=dhanya-lakshmi'
+    backstage.io/kubernetes-namespace: vgurukool
+    argocd/app-name: dhanya-lakshmi
+    backstage.io/view-url: https://dhanya-lakshmi.vgurukool.com
+  links:
+    - url: https://dhanya-lakshmi.vgurukool.com
+      title: Open Application
+      icon: dashboard
+    - url: https://github.com/vgurukool/dhanya-lakshmi
+      title: Source Code
+      icon: github
+spec:
+  type: website
+  lifecycle: production
+  owner: guests
+  system: lakshmi-suite
+---
+# 4. Gaja Lakshmi (Enterprise & Logistics)
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: gaja-lakshmi
+  title: Gaja Lakshmi
+  description: Heavy enterprise operations, logistics tracking, fleet management, and operational asset governance.
+  tags:
+    - business
+    - enterprise
+    - logistics
+    - lakshmi
+  annotations:
+    backstage.io/kubernetes-label-selector: 'app.kubernetes.io/name=gaja-lakshmi'
+    backstage.io/kubernetes-namespace: vgurukool
+    argocd/app-name: gaja-lakshmi
+    backstage.io/view-url: https://gaja-lakshmi.vgurukool.com
+  links:
+    - url: https://gaja-lakshmi.vgurukool.com
+      title: Open Application
+      icon: dashboard
+    - url: https://github.com/vgurukool/gaja-lakshmi
+      title: Source Code
+      icon: github
+spec:
+  type: website
+  lifecycle: production
+  owner: guests
+  system: lakshmi-suite
+---
+# 5. Vidya Lakshmi (Education & Scholarships)
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: vidya-lakshmi
+  title: Vidya Lakshmi
+  description: Educational scholarship portal, student aid management, and learning resource coordination.
+  tags:
+    - business
+    - education
+    - scholarship
+    - lakshmi
+  annotations:
+    backstage.io/kubernetes-label-selector: 'app.kubernetes.io/name=vidya-lakshmi'
+    backstage.io/kubernetes-namespace: vgurukool
+    argocd/app-name: vidya-lakshmi
+    backstage.io/view-url: https://vidya-lakshmi.vgurukool.com
+  links:
+    - url: https://vidya-lakshmi.vgurukool.com
+      title: Open Application
+      icon: dashboard
+    - url: https://github.com/vgurukool/vidya-lakshmi
+      title: Source Code
+      icon: github
+spec:
+  type: website
+  lifecycle: production
+  owner: guests
+  system: lakshmi-suite
+---
+# 6. CAIPE (AI Platform & Dynamic Agents)
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: caipe
+  title: CAIPE AI Platform
+  description: Cloud AI Platform Engine providing autonomous dynamic agents, tool integration, visual workflows, and conversational runtime.
+  tags:
+    - ai
+    - agents
+    - workflows
+    - llm
+  annotations:
+    backstage.io/kubernetes-label-selector: 'app.kubernetes.io/instance=caipe'
+    backstage.io/kubernetes-namespace: caipe
+    argocd/app-name: caipe
+    backstage.io/view-url: https://caipe.vgurukool.com
+  links:
+    - url: https://caipe.vgurukool.com
+      title: Open CAIPE
+      icon: dashboard
+    - url: https://github.com/vgurukool/caipe
+      title: Source Code
+      icon: github
+spec:
+  type: service
+  lifecycle: production
+  owner: guests
+  system: ai-platform
+---
+# 7. LearnHouse (LMS)
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: learnhouse
+  title: LearnHouse LMS
+  description: Open-source learning management platform featuring interactive courses, assessments, and community learning.
+  tags:
+    - ai
+    - education
+    - lms
+    - e-learning
+  annotations:
+    backstage.io/kubernetes-label-selector: 'app.kubernetes.io/instance=learnhouse'
+    backstage.io/kubernetes-namespace: learnhouse
+    argocd/app-name: learnhouse
+    backstage.io/view-url: https://learnhouse.vgurukool.com
+  links:
+    - url: https://learnhouse.vgurukool.com
+      title: Open LearnHouse
+      icon: dashboard
+    - url: https://github.com/vgurukool/learnhouse
+      title: Source Code
+      icon: github
+spec:
+  type: service
+  lifecycle: production
+  owner: guests
+  system: ai-platform
+---
+# 8. MAIC UI (Multi-Agent Chat Interface)
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: maic-ui
+  title: MAIC UI
+  description: Multi-Agent Interactive Collaboration UI for intelligent agents, role-playing agents, and multi-turn workflows.
+  tags:
+    - ai
+    - multi-agent
+    - frontend
+  annotations:
+    backstage.io/kubernetes-label-selector: 'app.kubernetes.io/name=maic-ui'
+    backstage.io/kubernetes-namespace: maic
+    argocd/app-name: maic-ui
+    backstage.io/view-url: https://maic.vgurukool.com
+  links:
+    - url: https://maic.vgurukool.com
+      title: Open MAIC UI
+      icon: dashboard
+    - url: https://github.com/vgurukool/maic-ui
+      title: Source Code
+      icon: github
+spec:
+  type: service
+  lifecycle: production
+  owner: guests
+  system: ai-platform
+---
+# 9. LiteLLM (LLM Proxy & Gateway)
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: litellm
+  title: LiteLLM Proxy Gateway
+  description: Centralized LLM gateway and proxy supporting unified API routing across OpenAI, Bedrock, Anthropic, Gemini, and local models.
+  tags:
+    - ai
+    - gateway
+    - proxy
+    - llm
+  annotations:
+    backstage.io/kubernetes-label-selector: 'app.kubernetes.io/name=litellm'
+    backstage.io/kubernetes-namespace: litellm
+    backstage.io/view-url: https://litellm.vgurukool.com
+  links:
+    - url: https://litellm.vgurukool.com
+      title: LiteLLM Admin UI
+      icon: dashboard
+    - url: https://github.com/BerriAI/litellm
+      title: Upstream LiteLLM
+      icon: github
+spec:
+  type: service
+  lifecycle: production
+  owner: guests
+  system: ai-platform
+---
+# 10. Argo CD (GitOps Delivery)
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: argocd
+  title: Argo CD
+  description: Declarative GitOps continuous delivery engine synchronizing Kubernetes manifests and helm releases.
+  tags:
+    - infrastructure
+    - gitops
+    - kubernetes
+    - cd
+  annotations:
+    backstage.io/kubernetes-label-selector: 'app.kubernetes.io/instance=argocd'
+    backstage.io/kubernetes-namespace: argocd
+    argocd/app-name: argocd-cnoe-ref-impl
+    backstage.io/view-url: https://vgurukool.com/argocd
+  links:
+    - url: https://vgurukool.com/argocd
+      title: Argo CD Console
+      icon: dashboard
+spec:
+  type: service
+  lifecycle: production
+  owner: guests
+  system: core-infrastructure
+---
+# 11. Argo Workflows (Pipelines)
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: argo-workflows
+  title: Argo Workflows
+  description: Container-native workflow orchestration engine for complex DAG and step-based pipelines.
+  tags:
+    - infrastructure
+    - workflows
+    - pipelines
+  annotations:
+    backstage.io/kubernetes-label-selector: 'app.kubernetes.io/instance=argo-workflows'
+    backstage.io/kubernetes-namespace: argo
+    argocd/app-name: argo-workflows-cnoe-ref-impl
+    backstage.io/view-url: https://vgurukool.com/argo-workflows
+  links:
+    - url: https://vgurukool.com/argo-workflows
+      title: Argo Workflows Console
+      icon: dashboard
+spec:
+  type: service
+  lifecycle: production
+  owner: guests
+  system: core-infrastructure
+---
+# 12. Keycloak (IAM & SSO)
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: keycloak
+  title: Keycloak IAM
+  description: Central identity and access management provider supporting OpenID Connect, SAML, and single sign-on.
+  tags:
+    - infrastructure
+    - auth
+    - sso
+    - oidc
+  annotations:
+    backstage.io/kubernetes-label-selector: 'app.kubernetes.io/instance=keycloak'
+    backstage.io/kubernetes-namespace: keycloak
+    argocd/app-name: keycloak-cnoe-ref-impl
+    backstage.io/view-url: https://vgurukool.com/keycloak
+  links:
+    - url: https://vgurukool.com/keycloak
+      title: Keycloak Admin Console
+      icon: dashboard
+spec:
+  type: service
+  lifecycle: production
+  owner: guests
+  system: core-infrastructure
+---
+# 13. Backstage (Developer Portal)
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: backstage
+  title: Backstage Developer Portal
+  description: Central developer portal, software catalog, tech docs, and service scaffolding for Vgurukool IDP.
+  tags:
+    - infrastructure
+    - idp
+    - portal
+    - catalog
+  annotations:
+    backstage.io/kubernetes-label-selector: 'app.kubernetes.io/instance=backstage'
+    backstage.io/kubernetes-namespace: backstage
+    argocd/app-name: backstage-cnoe-ref-impl
+    backstage.io/view-url: https://vgurukool.com
+  links:
+    - url: https://vgurukool.com
+      title: Developer Portal
+      icon: dashboard
+    - url: https://github.com/vgurukool/idp-aws
+      title: Infrastructure Repo
+      icon: github
+spec:
+  type: website
+  lifecycle: production
+  owner: guests
+  system: core-infrastructure

@@ -64,8 +64,6 @@ backstage:
     integrations:
       github:
         - host: github.com
-          apps:
-            - $include: /app/config/github-integration.yaml
     proxy:
       '/argo-workflows/api':
         target: ${ARGO_WORKFLOWS_URL}
@@ -104,7 +102,7 @@ backstage:
         entityFilename: catalog-info.yaml
         pullRequestBranchName: backstage-integration
       rules:
-        - allow: [Component, System, API, Resource, Location, Template]
+        - allow: [Component, System, API, Resource, Location, Template, Domain]
     kubernetes:
       serviceLocatorMethod:
         type: multiTenant
