@@ -102,7 +102,7 @@ backstage:
         entityFilename: catalog-info.yaml
         pullRequestBranchName: backstage-integration
       rules:
-        - allow: [Component, System, API, Resource, Location, Template, Domain]
+        - allow: [Component, System, API, Resource, Location, Template, Domain, User, Group]
     kubernetes:
       serviceLocatorMethod:
         type: multiTenant
