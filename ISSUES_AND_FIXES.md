@@ -16,6 +16,7 @@ This document serves as the central log of technical issues, root causes, remedi
 8. [LiteLLM: Dedicated Namespace Migration & Pod Balancing](#8-litellm-dedicated-namespace-migration--pod-balancing)
 9. [AWS Cost Optimization: EKS Control Plane Logging (CloudWatch Vended Logs Surge)](#9-aws-cost-optimization-eks-control-plane-logging-cloudwatch-vended-logs-surge)
 10. [Automated Daily Cost Email Reporter (Serverless Lambda + EventBridge)](#10-automated-daily-cost-email-reporter-serverless-lambda--eventbridge)
+11. [LearnHouse: Unable to Log In & Database Pod Scheduling Starvation](#11-learnhouse-unable-to-log-in--database-pod-scheduling-starvation)
 
 ---
 
@@ -337,5 +338,36 @@ To ensure complete visibility into daily and month-to-date AWS spend without man
 ### Verification
 * Executed test invocation: Returned HTTP 200 (`{"status": "success", "yesterday_cost": 24.71, "mtd_cost": 261.16}`).
 * Message dispatched to SNS topic and delivered to `ayush.o.singhaniya@gmail.com`.
+
+---
+
+## 11. LearnHouse: Unable to Log In & Database Pod Scheduling Starvation
+
+### Symptoms
+* Users attempting to log into LearnHouse (`https://learnhouse.vgurukool.com`) were unable to authenticate.
+
+### Root Causes
+1. **Database Pod Unschedulable (`learnhouse-db-0` Pending):**
+   * LearnHouse PostgreSQL database (`learnhouse-db-0`) requires an EBS volume pinned to Availability Zone `us-east-2b`.
+   * After the cluster was scaled up from hibernation, worker node `ip-10-0-19-198` (in `us-east-2b`) was flooded with 35 stateless pods (hitting the ENI 35-pod maximum limit and 99% CPU request).
+   * Kubernetes failed to schedule `learnhouse-db-0`, leaving the database offline.
+2. **Backend Connection Refusal:**
+   * LearnHouse API threw `ConnectionRefusedError: [Errno 111] Connect call failed ('172.20.195.154', 5432)` and failed all incoming authentication requests.
+3. **Account Credential Partitioning:**
+   * `user1` and `user2` were provisioned via Keycloak SSO and lacked a local password hash in the LearnHouse database. Submitting their credentials into the standard email/password form yielded `INVALID_CREDENTIALS`.
+
+### Remediation & Fixes
+1. **Rebalanced Overloaded Node:**
+   * Deleted duplicate stateless pods from `us-east-2b`, allowing them to redistribute to underutilized nodes in `us-east-2a` and `us-east-2c`.
+   * `learnhouse-db-0` immediately scheduled onto `us-east-2b` and mounted its persistent volume.
+2. **Reset LearnHouse Connection Pool:**
+   * Restarted `deployment/learnhouse` to re-establish active database connection pools.
+3. **Dual Authentication Support:**
+   * Synchronized password credentials for `user1@vgurukool.com` and `user2@vgurukool.com` so they support **both** direct Email/Password login and Keycloak SSO.
+
+### Verification
+* Probed `/api/v1/auth/login` for `admin@vgurukool.com`, `user1@vgurukool.com`, and `user2@vgurukool.com`: All return HTTP 200 with valid JWT access and refresh tokens.
+* All 4 LearnHouse pods (`learnhouse-db-0`, `learnhouse-redis`, and both `learnhouse` app replicas) report `1/1 Running`.
+
 
 
