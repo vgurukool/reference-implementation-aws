@@ -145,11 +145,18 @@ keycloak:
     ingress:
       hostname: '{{ if eq .metadata.labels.path_routing "false" }}keycloak.{{ .metadata.annotations.domain }}{{ else }}{{ .metadata.annotations.domain }}{{ end }}'
       annotations: 
-        cert-manager.io/cluster-issuer: '{{ if eq .metadata.labels.path_routing "false" }}letsencrypt-prod{{ end }}'
+        cert-manager.io/cluster-issuer: 'letsencrypt-prod'
+        kubernetes.io/tls-acme: "true"
+      extraHosts:
+      - name: 'platform.{{ .metadata.annotations.domain }}'
+        path: '/{{ if eq .metadata.labels.path_routing "true" }}keycloak/{{ end }}'
       extraTls:
       - hosts:
         - '{{ if eq .metadata.labels.path_routing "false" }}keycloak.{{ .metadata.annotations.domain }}{{ else }}{{ .metadata.annotations.domain }}{{ end }}'
         secretName: keycloak-server-tls
+      - hosts:
+        - 'platform.{{ .metadata.annotations.domain }}'
+        secretName: keycloak-platform-tls
   additionalResources:
   - manifestPath: "manifests"
     type: "manifests"
