@@ -168,9 +168,10 @@ backstage:
   chartRepository: "https://backstage.github.io/charts"
   valuesObject:
     ingress:
-      host: '{{ if eq .metadata.labels.path_routing "false" }}backstage.{{ .metadata.annotations.domain }}{{ else }}{{ .metadata.annotations.domain }}{{ end }}'
+      host: 'platform.{{ .metadata.annotations.domain }}'
       annotations: 
-        cert-manager.io/cluster-issuer: '{{ if eq .metadata.labels.path_routing "false" }}letsencrypt-prod{{ end }}'
+        cert-manager.io/cluster-issuer: 'letsencrypt-prod'
+        kubernetes.io/tls-acme: "true"
     backstage:
       appConfig:
         catalog:
@@ -181,7 +182,7 @@ backstage:
       - name: NODE_TLS_REJECT_UNAUTHORIZED
         value: "0"
       - name: BACKSTAGE_FRONTEND_URL
-        value: 'https://{{ if eq .metadata.labels.path_routing "false" }}backstage.{{ .metadata.annotations.domain }}{{ else }}{{ .metadata.annotations.domain }}{{ end }}'
+        value: 'https://platform.{{ .metadata.annotations.domain }}'
       - name: KEYCLOAK_NAME_METADATA
         value: 'https://{{ if eq .metadata.labels.path_routing "false" }}keycloak.{{ .metadata.annotations.domain }}{{ else }}{{ .metadata.annotations.domain }}/keycloak{{ end }}/realms/cnoe/.well-known/openid-configuration'
       - name: ARGO_WORKFLOWS_URL
