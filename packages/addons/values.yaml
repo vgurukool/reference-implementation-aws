@@ -143,20 +143,20 @@ keycloak:
   valuesObject:
     httpRelativePath: '/{{ if eq .metadata.labels.path_routing "true" }}keycloak/{{ end }}'
     ingress:
-      hostname: '{{ if eq .metadata.labels.path_routing "false" }}keycloak.{{ .metadata.annotations.domain }}{{ else }}{{ .metadata.annotations.domain }}{{ end }}'
+      hostname: 'platform.{{ .metadata.annotations.domain }}'
       annotations: 
         cert-manager.io/cluster-issuer: 'letsencrypt-prod'
         kubernetes.io/tls-acme: "true"
       extraHosts:
-      - name: 'platform.{{ .metadata.annotations.domain }}'
+      - name: '{{ .metadata.annotations.domain }}'
         path: '/{{ if eq .metadata.labels.path_routing "true" }}keycloak/{{ end }}'
       extraTls:
       - hosts:
-        - '{{ if eq .metadata.labels.path_routing "false" }}keycloak.{{ .metadata.annotations.domain }}{{ else }}{{ .metadata.annotations.domain }}{{ end }}'
-        secretName: keycloak-server-tls
-      - hosts:
         - 'platform.{{ .metadata.annotations.domain }}'
         secretName: keycloak-platform-tls
+      - hosts:
+        - '{{ .metadata.annotations.domain }}'
+        secretName: keycloak-server-tls
   additionalResources:
   - manifestPath: "manifests"
     type: "manifests"
@@ -191,7 +191,7 @@ backstage:
       - name: BACKSTAGE_FRONTEND_URL
         value: 'https://platform.{{ .metadata.annotations.domain }}'
       - name: KEYCLOAK_NAME_METADATA
-        value: 'https://{{ if eq .metadata.labels.path_routing "false" }}keycloak.{{ .metadata.annotations.domain }}{{ else }}{{ .metadata.annotations.domain }}/keycloak{{ end }}/realms/cnoe/.well-known/openid-configuration'
+        value: 'https://platform.{{ .metadata.annotations.domain }}/keycloak/realms/cnoe/.well-known/openid-configuration'
       - name: ARGO_WORKFLOWS_URL
         value: 'https://{{ if eq .metadata.labels.path_routing "false" }}argo-workflows.{{ .metadata.annotations.domain }}{{ else }}{{ .metadata.annotations.domain }}/argo-workflows{{ end }}'
       - name: ARGO_CD_URL
