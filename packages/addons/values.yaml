@@ -141,6 +141,7 @@ keycloak:
   defaultVersion: "24.7.3"
   chartRepository: "https://charts.bitnami.com/bitnami"
   valuesObject:
+    proxyHeaders: "xforwarded"
     httpRelativePath: '/{{ if eq .metadata.labels.path_routing "true" }}keycloak/{{ end }}'
     ingress:
       hostname: 'platform.{{ .metadata.annotations.domain }}'

@@ -1,7 +1,7 @@
 adminRealm: "cnoe"
 production: true
 usePasswordFiles: false
-proxyHeaders: "forwarded"
+proxyHeaders: "xforwarded"
 
 image:
   registry: docker.io
