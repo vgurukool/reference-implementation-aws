@@ -180,6 +180,9 @@ backstage:
       annotations: 
         cert-manager.io/cluster-issuer: 'letsencrypt-prod'
         kubernetes.io/tls-acme: "true"
+      tls:
+        enabled: true
+        secretName: 'platform-backstage-tls'
     backstage:
       appConfig:
         catalog:
