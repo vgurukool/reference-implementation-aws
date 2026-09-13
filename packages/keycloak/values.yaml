@@ -21,10 +21,22 @@ auth:
 ingress:
   enabled: true
   ingressClassName: nginx
-  hostnameStrict: true
+  hostnameStrict: false
   servicePort: http
   annotations:
     argocd.argoproj.io/sync-wave: "20"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    kubernetes.io/tls-acme: "true"
+  extraHosts:
+    - name: platform.vgurukool.com
+      path: /keycloak/
+  extraTls:
+    - hosts:
+        - vgurukool.com
+      secretName: keycloak-server-tls
+    - hosts:
+        - platform.vgurukool.com
+      secretName: keycloak-platform-tls
   tls: false
 
 postgresql:
